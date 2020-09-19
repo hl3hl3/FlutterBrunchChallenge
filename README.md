@@ -13,8 +13,10 @@
 https://www.youtube.com/watch?v=PbIlXoijRvM      
     
 這次小挑戰的實作頁面位置在 lib/ui/pacman/pacman_screen.dart，    
-// TODO  畫面如下：    
-<img src="https://github.com/hl3hl3/FlutterBrunchChallenge/blob/feature/20200919_pacman/readme/challenge202009/20200919_pacman_todo.gif" width="300">
+（範例在 branch feature/20200919_pacman_sample）    
+TODO 畫面  和 完成後畫面 如下：    
+<img src="https://github.com/flutterTaipei/FlutterBrunchChallenge/blob/feature/20200919_pacman/readme/challenge202009/20200919_pacman_todo_1.gif" width="300">
+<img src="https://github.com/flutterTaipei/FlutterBrunchChallenge/blob/feature/20200919_pacman/readme/challenge202009/20200919_pacman_done.gif" width="300">
 
 #### 最終樣貌
 <img src="https://github.com/hl3hl3/FlutterBrunchChallenge/blob/feature/20200919_pacman/readme/challenge202009/20200919_pacman_0_final.png" width="600">
