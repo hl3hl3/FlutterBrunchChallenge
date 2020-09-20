@@ -76,8 +76,10 @@ class _PacManScreenState extends State<PacManScreen> {
     }
   }
 
+  bool _canGo(int index) => _barriers.contains(index);
+
   _moveUp() {
-    if (_barriers.contains(player - _numberInRow)) {
+    if (_canGo(player - _numberInRow)) {
       debugPrint('撞牆，不動');
     } else {
       player -= _numberInRow;
@@ -85,7 +87,7 @@ class _PacManScreenState extends State<PacManScreen> {
   }
 
   _moveDown() {
-    if (_barriers.contains(player + _numberInRow)) {
+    if (_canGo(player + _numberInRow)) {
       debugPrint('撞牆，不動');
     } else {
       player += _numberInRow;
@@ -93,7 +95,7 @@ class _PacManScreenState extends State<PacManScreen> {
   }
 
   _moveLeft() {
-    if (_barriers.contains(player - 1)) {
+    if (_canGo(player - 1)) {
       debugPrint('撞牆，不動');
     } else {
       player--;
@@ -101,7 +103,7 @@ class _PacManScreenState extends State<PacManScreen> {
   }
 
   _moveRight() {
-    if (_barriers.contains(player + 1)) {
+    if (_canGo(player + 1)) {
       debugPrint('撞牆，不動');
     } else {
       player++;
