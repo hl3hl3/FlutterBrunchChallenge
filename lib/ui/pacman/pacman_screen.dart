@@ -27,7 +27,8 @@ class _PacManScreenState extends State<PacManScreen> {
   int _score = 0;
   String gameStatus = 'stop';
   int frameDuration = 500;
-  Ghost ghost1;
+  List<Ghost> ghosts = List();
+  int ghostCount = 3;
 
   _playGame() {
     debugPrint('play game');
@@ -55,11 +56,12 @@ class _PacManScreenState extends State<PacManScreen> {
   _move() {
     debugPrint('move()');
     _movePlayer();
-    ghost1.move();
-    // 動完後判斷有沒有被抓到
-    if (ghost1.isHit(player)) {
-      _damage();
-    }
+    ghosts.forEach((ghost) {
+      ghost.move();
+      if (ghost.isHit(player)) {
+        _damage();
+      }
+    });
     // 動完就判斷是否有東西吃
     if (_foods.contains(player)) {
       // 若 食物列表 包含 player 上個 frame 移動後的位置，則代表，可以吃到！！
@@ -137,7 +139,7 @@ class _PacManScreenState extends State<PacManScreen> {
             crossAxisCount: _numberInRow,
           ),
           itemBuilder: (BuildContext context, int index) {
-            if (ghost1.isHit(index)) {
+            if (ghosts.any((ghost) => ghost.isHit(index))) {
               return _ghostRole();
             }
             if (index == player) {
@@ -181,13 +183,19 @@ class _PacManScreenState extends State<PacManScreen> {
       }
     }
 
-    ghost1 = Ghost(
-        position: (_numberInRow - 1) * 2,
-        canGo: _canGo,
-        nextUp: _up,
-        nextDown: _down,
-        nextLeft: _left,
-        nextRight: _right);
+    // generate ghost!!!
+    for (int i = 0; i < ghostCount; i++) {
+      ghosts.add(
+        Ghost(
+          position: (_numberInRow - 1) * 2,
+          canGo: _canGo,
+          nextUp: _up,
+          nextDown: _down,
+          nextLeft: _left,
+          nextRight: _right,
+        ),
+      );
+    }
   }
 
   @override
