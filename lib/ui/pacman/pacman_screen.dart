@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,7 @@ import 'package:flutter_brunch_challenge/ui/pacman/component/player.dart';
 
 import 'component/path_square.dart';
 import 'component/square.dart';
+import 'model/ghost.dart';
 
 class PacManScreen extends StatefulWidget {
   @override
@@ -19,7 +18,7 @@ class _PacManScreenState extends State<PacManScreen> {
   static int _numberInRow = 11;
   static int _numberInColumn = 17;
   int _numberOfSquares = _numberInRow * _numberInColumn;
-  int ghost = (_numberInRow - 1) * 2; // 初始在右上角
+
   int player = _numberInRow * (_numberInColumn - 2) + 1;
   List _barriers = PacManMap().barriers;
   List<int> _foods = List();
@@ -28,6 +27,7 @@ class _PacManScreenState extends State<PacManScreen> {
   int _score = 0;
   String gameStatus = 'stop';
   int frameDuration = 500;
+  Ghost ghost1;
 
   _playGame() {
     debugPrint('play game');
@@ -55,9 +55,9 @@ class _PacManScreenState extends State<PacManScreen> {
   _move() {
     debugPrint('move()');
     _movePlayer();
-    _moveGhost();
+    ghost1.move();
     // 動完後判斷有沒有被抓到
-    if (ghost == player) {
+    if (ghost1.isHit(player)) {
       _damage();
     }
     // 動完就判斷是否有東西吃
@@ -65,23 +65,6 @@ class _PacManScreenState extends State<PacManScreen> {
       // 若 食物列表 包含 player 上個 frame 移動後的位置，則代表，可以吃到！！
       _eatFood();
     }
-  }
-
-  List _ghostNext = List();
-
-  _addToGhostNextIfValid(int position) {
-    if (_canGo(position)) {
-      _ghostNext.add(position);
-    }
-  }
-
-  _moveGhost() {
-    _ghostNext.clear();
-    _addToGhostNextIfValid(_up(ghost));
-    _addToGhostNextIfValid(_down(ghost));
-    _addToGhostNextIfValid(_left(ghost));
-    _addToGhostNextIfValid(_right(ghost));
-    ghost = _ghostNext[Random.secure().nextInt(_ghostNext.length)];
   }
 
   bool _canGo(int index) => !_beBlocked(index);
@@ -154,7 +137,7 @@ class _PacManScreenState extends State<PacManScreen> {
             crossAxisCount: _numberInRow,
           ),
           itemBuilder: (BuildContext context, int index) {
-            if (index == ghost) {
+            if (ghost1.isHit(index)) {
               return _ghostRole();
             }
             if (index == player) {
@@ -197,6 +180,14 @@ class _PacManScreenState extends State<PacManScreen> {
         _foods.add(i);
       }
     }
+
+    ghost1 = Ghost(
+        position: (_numberInRow - 1) * 2,
+        canGo: _canGo,
+        nextUp: _up,
+        nextDown: _down,
+        nextLeft: _left,
+        nextRight: _right);
   }
 
   @override
