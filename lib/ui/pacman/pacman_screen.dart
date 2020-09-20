@@ -76,36 +76,32 @@ class _PacManScreenState extends State<PacManScreen> {
     }
   }
 
-  bool _canGo(int index) => _barriers.contains(index);
+  bool _canGo(int index) => !_beBlocked(index);
+
+  bool _beBlocked(int index) {
+    return _barriers.contains(index);
+  }
 
   _moveUp() {
     if (_canGo(player - _numberInRow)) {
-      debugPrint('撞牆，不動');
-    } else {
       player -= _numberInRow;
     }
   }
 
   _moveDown() {
     if (_canGo(player + _numberInRow)) {
-      debugPrint('撞牆，不動');
-    } else {
       player += _numberInRow;
     }
   }
 
   _moveLeft() {
     if (_canGo(player - 1)) {
-      debugPrint('撞牆，不動');
-    } else {
       player--;
     }
   }
 
   _moveRight() {
     if (_canGo(player + 1)) {
-      debugPrint('撞牆，不動');
-    } else {
       player++;
     }
   }
