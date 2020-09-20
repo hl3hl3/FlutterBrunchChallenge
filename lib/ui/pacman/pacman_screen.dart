@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_brunch_challenge/ui/pacman/barrier_map.dart';
 
@@ -51,20 +53,8 @@ class _PacManScreenState extends State<PacManScreen> {
 
   _move() {
     debugPrint('move()');
-    switch (direction) {
-      case "up":
-        _moveUp();
-        break;
-      case "down":
-        _moveDown();
-        break;
-      case "left":
-        _moveLeft();
-        break;
-      case "right":
-        _moveRight();
-        break;
-    }
+    _movePlayer();
+    _moveGhost();
     // 動完後判斷有沒有被抓到
     if (ghost == player) {
       _damage();
@@ -76,33 +66,61 @@ class _PacManScreenState extends State<PacManScreen> {
     }
   }
 
+  List _ghostNext = List();
+
+  _addToGhostNextIfValid(int position) {
+    if (_canGo(position)) {
+      _ghostNext.add(position);
+    }
+  }
+
+  _moveGhost() {
+    _ghostNext.clear();
+    _addToGhostNextIfValid(_up(ghost));
+    _addToGhostNextIfValid(_down(ghost));
+    _addToGhostNextIfValid(_left(ghost));
+    _addToGhostNextIfValid(_right(ghost));
+    ghost = _ghostNext[Random.secure().nextInt(_ghostNext.length)];
+  }
+
   bool _canGo(int index) => !_beBlocked(index);
 
   bool _beBlocked(int index) {
     return _barriers.contains(index);
   }
 
-  _moveUp() {
-    if (_canGo(player - _numberInRow)) {
-      player -= _numberInRow;
+  int _up(int index) => index - _numberInRow;
+
+  int _down(int index) => index + _numberInRow;
+
+  int _left(int index) => index - 1;
+
+  int _right(int index) => index + 1;
+
+  _movePlayer() {
+    debugPrint("_movePlayer, direction=$direction");
+    switch (direction) {
+      case "up":
+        _movePlayerIfValid(_up(player));
+        break;
+      case "down":
+        _movePlayerIfValid(_down(player));
+        break;
+      case "left":
+        _movePlayerIfValid(_left(player));
+        break;
+      case "right":
+        _movePlayerIfValid(_right(player));
+        break;
     }
   }
 
-  _moveDown() {
-    if (_canGo(player + _numberInRow)) {
-      player += _numberInRow;
-    }
-  }
-
-  _moveLeft() {
-    if (_canGo(player - 1)) {
-      player--;
-    }
-  }
-
-  _moveRight() {
-    if (_canGo(player + 1)) {
-      player++;
+  _movePlayerIfValid(int position) {
+    if (_canGo(position)) {
+      player = position;
+      debugPrint("_movePlayer, direction=$direction, next=$player");
+    } else {
+      debugPrint("_movePlayer, direction=$direction, stop.");
     }
   }
 
