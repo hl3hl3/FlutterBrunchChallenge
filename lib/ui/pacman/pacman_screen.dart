@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_brunch_challenge/ui/pacman/barrier_map.dart';
+import 'package:flutter_brunch_challenge/ui/pacman/component/player.dart';
 
 import 'component/path_square.dart';
 import 'component/square.dart';
@@ -124,28 +125,6 @@ class _PacManScreenState extends State<PacManScreen> {
     }
   }
 
-  Widget _playerRolw() {
-    double angle = 0;
-    switch (direction) {
-      case "up":
-        angle = pi / 2 * 3;
-        break;
-      case "down":
-        angle = pi / 2;
-        break;
-      case "left":
-        angle = pi;
-        break;
-      case "right":
-        angle = pi * 2;
-        break;
-    }
-    return Transform.rotate(
-      angle: angle,
-      child: Image.asset("images/pacman.png"),
-    );
-  }
-
   Widget _ghostRole() {
     return Image.asset("images/ghost.png");
   }
@@ -179,7 +158,7 @@ class _PacManScreenState extends State<PacManScreen> {
               return _ghostRole();
             }
             if (index == player) {
-              return _playerRolw();
+              return PlayerRole(direction: direction);
             }
 //            final childForDebug = Text('$index');
             final childForDebug = null;
